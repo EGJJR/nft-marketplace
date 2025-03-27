@@ -8,12 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    $confirmPassword = $_POST['confirm_password'];
 
     // Validate input
     if (empty($username) || empty($email) || empty($password)) {
         $error = "All fields are required";
-    } elseif ($password !== $confirm_password) {
+    } elseif ($password !== $confirmPassword) {
         $error = "Passwords do not match";
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters long";
@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Username or email already exists";
         } else {
             // Create new user
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
             
-            if ($stmt->execute([$username, $email, $password_hash])) {
+            if ($stmt->execute([$username, $email, $passwordHash])) {
                 $success = "Registration successful! Please login.";
             } else {
                 $error = "Registration failed. Please try again.";
@@ -80,4 +80,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-</div> 
+</div>
