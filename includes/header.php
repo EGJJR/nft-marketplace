@@ -1,3 +1,6 @@
+
+Here is the refactored code:
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +39,7 @@
                         </li>
                     <?php endif; ?>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="auth/logout.php">Logout</a>
@@ -53,4 +56,5 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-4"> 
+    <div class="container mt-4">
+```

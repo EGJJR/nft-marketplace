@@ -1,3 +1,4 @@
+
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
@@ -10,9 +11,9 @@ try {
         "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
         DB_USER,
         DB_PASS,
-        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-?> 
+?>
