@@ -1,63 +1,11 @@
-<?php
-require_once __DIR__ . '/../db/db_config.php';
 
-// Fetch user's NFTs
-$stmt = $conn->prepare("
-    SELECT * FROM nfts 
-    WHERE user_id = ? 
-    ORDER BY created_at DESC
-");
-$stmt->execute([$_SESSION['user_id']]);
-$nfts = $stmt->fetchAll();
-?>
+The given PHP code is a simple web application that allows users to manage their NFTs. The code fetches the user's NFTs from the database and displays them on the page in a card layout.
 
-<div class="container">
-    <div class="row mb-4">
-        <div class="col">
-            <h1>Manage Your NFTs</h1>
-            <p class="lead">View and manage your NFT collection</p>
-        </div>
-        <div class="col text-end">
-            <a href="index.php?page=upload_nft" class="btn btn-primary">Upload New NFT</a>
-        </div>
-    </div>
+Here are some suggestions for refactoring this code to improve its security, readability, and maintainability:
 
-    <?php if (empty($nfts)): ?>
-        <div class="alert alert-info">
-            You haven't uploaded any NFTs yet. 
-            <a href="index.php?page=upload_nft" class="alert-link">Upload your first NFT</a>!
-        </div>
-    <?php else: ?>
-        <div class="row">
-            <?php foreach ($nfts as $nft): ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="<?php echo htmlspecialchars($nft['image_url']); ?>" 
-                             class="card-img-top" 
-                             alt="<?php echo htmlspecialchars($nft['title']); ?>"
-                             style="height: 200px; object-fit: cover;">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($nft['title']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars(substr($nft['description'], 0, 100)) . '...'; ?></p>
-                            <p class="card-text">
-                                <strong>Price: $<?php echo number_format($nft['price'], 2); ?></strong>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    Created: <?php echo date('M d, Y', strtotime($nft['created_at'])); ?>
-                                </small>
-                            </p>
-                            <div class="btn-group w-100">
-                                <a href="index.php?page=edit_nft&nft_id=<?php echo $nft['nft_id']; ?>" 
-                                   class="btn btn-outline-primary">Edit</a>
-                                <a href="index.php?page=delete_nft&nft_id=<?php echo $nft['nft_id']; ?>" 
-                                   class="btn btn-outline-danger"
-                                   onclick="return confirm('Are you sure you want to delete this NFT?')">Delete</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-</div> 
+1. Use prepared statements: The given code uses `mysqli_prepare()`, which is an outdated function that can lead to SQL injection vulnerabilities if proper sanitization is not implemented. To fix this issue, it's recommended to use PDO or MySQLi's built-in prepared statement functionality, which can help prevent SQL injection attacks.
+2. Use PHP's built-in escaping mechanism: The code uses `htmlspecialchars()` function to escape special characters in the NFT title and description. However, this function is not sufficient for all cases, as it only escapes a limited set of characters. To ensure that all special characters are escaped properly, it's recommended to use PHP's built-in `htmlentities()` function instead.
+3. Use consistent naming conventions: The code uses both camelCase and snake_case variable names, which can make the code harder to read. It's recommended to use a consistent naming convention throughout the code, such as either camelCase or snake_case, to improve readability.
+4. Use proper error handling: The given code does not handle any errors that may occur during database queries. To fix this issue, it's recommended to add proper error handling, such as using try-catch blocks and logging the errors.
+5. Use a more modern PHP framework: The given code is a simple web application, but it uses the outdated `mysqli_prepare()` function, which makes it difficult to use modern PHP frameworks that provide better security and performance features. It's recommended to migrate the code to a more modern PHP framework, such as Laravel or Symfony, which provides better security features, improved performance, and easier maintenance.
+6. Use HTTPS: The given code uses HTTP, which can be vulnerable to eavesdropping and interception attacks. To fix this issue, it's recommended to use HTTPS (HTTP Over SSL/TLS) to encrypt the data transmitted between the client and server.
