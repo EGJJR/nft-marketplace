@@ -1,3 +1,4 @@
+```
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
@@ -15,4 +16,5 @@ try {
 } catch(PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-?> 
+?>
+```
