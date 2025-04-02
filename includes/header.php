@@ -1,3 +1,5 @@
+Here is the refactored code:
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,45 +14,70 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.php">NFT Marketplace</a>
+            <a class="navbar-brand" href="#">NFT Marketplace</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link active" aria-current="page" href="#home">Home</a>
                     </li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=dashboard">Dashboard</a>
+                            <a class="nav-link" href="#dashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=upload_nft">Upload NFT</a>
+                            <a class="nav-link" href="#upload_nft">Upload NFT</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=manage_nfts">Manage NFTs</a>
+                            <a class="nav-link" href="#manage_nfts">Manage NFTs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=transactions">Transactions</a>
+                            <a class="nav-link" href="#transactions">Transactions</a>
                         </li>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="auth/logout.php">Logout</a>
+                            <a class="nav-link" href="#logout">Logout</a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=login">Login</a>
+                            <a class="nav-link" href="#login">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=register">Register</a>
+                            <a class="nav-link" href="#register">Register</a>
                         </li>
                     <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container mt-4"> 
+    <main id="main">
+        <section id="home" class="py-5">
+            <!-- Home content here -->
+        </section>
+        <section id="dashboard" class="py-5">
+            <!-- Dashboard content here -->
+        </section>
+        <section id="upload_nft" class="py-5">
+            <!-- Upload NFT content here -->
+        </section>
+        <section id="manage_nfts" class="py-5">
+            <!-- Manage NFTs content here -->
+        </section>
+        <section id="transactions" class="py-5">
+            <!-- Transactions content here -->
+        </section>
+        <section id="login" class="py-5">
+            <!-- Login content here -->
+        </section>
+        <section id="register" class="py-5">
+            <!-- Register content here -->
+        </section>
+    </main>
+</body>
+</html>
+```

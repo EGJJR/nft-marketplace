@@ -1,3 +1,4 @@
+
 <?php
 require_once __DIR__ . '/../db/db_config.php';
 
@@ -6,7 +7,7 @@ $success = '';
 $nft = null;
 
 // Get NFT ID from URL
-$nft_id = isset($_GET['nft_id']) ? intval($_GET['nft_id']) : 0;
+$nftId = isset($_GET['nft_id']) ? intval($_GET['nft_id']) : 0;
 
 // Fetch NFT details
 $stmt = $conn->prepare("
@@ -15,7 +16,7 @@ $stmt = $conn->prepare("
     JOIN users u ON n.user_id = u.user_id 
     WHERE n.nft_id = ?
 ");
-$stmt->execute([$nft_id]);
+$stmt->execute([$nftId]);
 $nft = $stmt->fetch();
 
 if (!$nft) {
@@ -30,6 +31,7 @@ if ($nft['user_id'] === $_SESSION['user_id']) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
     try {
+        // Begin transaction
         $conn->beginTransaction();
         
         // Insert transaction record
@@ -37,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
             INSERT INTO transactions (buyer_id, nft_id, price) 
             VALUES (?, ?, ?)
         ");
-        $stmt->execute([$_SESSION['user_id'], $nft_id, $nft['price']]);
+        $stmt->execute([$_SESSION['user_id'], $nftId, $nft['price']]);
         
         // Update NFT ownership
         $stmt = $conn->prepare("
@@ -45,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
             SET user_id = ? 
             WHERE nft_id = ?
         ");
-        $stmt->execute([$_SESSION['user_id'], $nft_id]);
+        $stmt->execute([$_SESSION['user_id'], $nftId]);
         
+        // Commit transaction
         $conn->commit();
         $success = "NFT purchased successfully!";
         
@@ -57,10 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
             JOIN users u ON n.user_id = u.user_id 
             WHERE n.nft_id = ?
         ");
-        $stmt->execute([$nft_id]);
+        $stmt->execute([$nftId]);
         $nft = $stmt->fetch();
         
     } catch (Exception $e) {
+        // Rollback transaction
         $conn->rollBack();
         $error = "Transaction failed. Please try again.";
     }
@@ -71,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Purchase NFT</h3>
+                <div class="card-header text-center">
+                    <h3>Purchase NFT</h3>
                 </div>
                 <div class="card-body">
                     <?php if ($error): ?>
@@ -86,25 +90,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
                         <div class="col-md-6">
                             <img src="<?php echo htmlspecialchars($nft['image_url']); ?>" 
                                  alt="<?php echo htmlspecialchars($nft['title']); ?>" 
-                                 class="img-fluid rounded">
+                                 class="img-fluid">
                         </div>
                         <div class="col-md-6">
-                            <h4><?php echo htmlspecialchars($nft['title']); ?></h4>
-                            <p class="text-muted">
-                                Created by: <?php echo htmlspecialchars($nft['seller_name']); ?>
-                            </p>
-                            <p><?php echo htmlspecialchars($nft['description']); ?></p>
-                            <h5 class="text-primary">Price: $<?php echo number_format($nft['price'], 2); ?></h5>
+                            <h3><?php echo $nft['title']; ?></h3>
+                            <p><?php echo $nft['description']; ?></p>
+                            <h5>Price: <?php echo $nft['price']; ?> ETH</h5>
                             
                             <?php if (empty($error) && !$success): ?>
                                 <form method="POST" action="">
-                                    <div class="d-grid">
+                                    <div class="d-grid mt-3">
                                         <button type="submit" class="btn btn-primary">Confirm Purchase</button>
                                     </div>
                                 </form>
                             <?php endif; ?>
                             
-                            <div class="mt-3">
+                            <div class="mt-3 d-grid">
                                 <a href="index.php" class="btn btn-secondary">Back to Home</a>
                             </div>
                         </div>
@@ -113,4 +114,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
             </div>
         </div>
     </div>
-</div> 
+</div>
